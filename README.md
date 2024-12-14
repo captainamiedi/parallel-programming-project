@@ -5,9 +5,13 @@ This project demonstrates the parallelization of the **Floyd-Warshall** algorith
 ## 1. Algorithm and Parallelization Method
 
 ### Algorithm
-The **Floyd-Warshall** algorithm is used to find the shortest paths between all pairs of nodes in a graph. It iterates over all possible intermediate nodes and updates the shortest distance between all pairs of nodes using the following relation: 
+The **Floyd-Warshall** algorithm is used to find the shortest paths between all pairs of nodes in a graph. It iterates over all possible intermediate nodes and updates the shortest distance between all pairs of nodes using the following relation:` 
 
 dist[i, j] = min(dist[i, j], dist[i, k] + dist[k, j])
+
+markdown
+
+Copy code
 
  `Where:`
 - `dist[i, j]` represents the shortest distance between nodes `i` and `j`.
@@ -32,62 +36,26 @@ Make sure you have the following tools and libraries installed:
 - **CUDA Toolkit** installed with a compatible GPU
 
 ### Installation
-To install the required dependencies, run the following command:
-
+1.  Clone the repository.
+    ```bash
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
+    
+2.  Install the required dependencies as mentioned below.
 ```bash
 pip install numba numpy
 ```
-### Data Format
+### Running the Script
 
-The input graph should be represented as a 2D **distance matrix** where:
+[](https://github.com/captainamiedi/parallel-programming-project#running-the-script)
 
--   `graph[i][j]` represents the distance from node `i` to node `j`.
--   A value of `inf` (infinity) indicates no direct path between nodes.
--   The diagonal elements `graph[i][i]` should be `0`, as the distance from a node to itself is zero.
-
-#### Example of Data Format:
-
-`graph = [
-    [0, 5, inf, inf],
-    [5, 0, 2, 10],
-    [inf, 2, 0, 3],
-    [inf, 10, 3, 0]
-]` 
-
-### Running the Code
-
-1.  Clone the repository and navigate to the project directory.
-2.  Place your graph data in the format mentioned above into a `.npy` or `.csv` file.
-3.  Load the data into the algorithm as shown in the example below.
-4.  Run the parallelized Floyd-Warshall algorithm with various thread configurations to evaluate performance.
-
-#### Example:
-```bash
-import numpy as np
-from floyd_warshall_cuda import floyd_warshall_cuda_host
-```
-
-# Load graph data (example format)
-```bash
-graph = np.array([
-    [0, 5, float('inf'), float('inf')],
-    [5, 0, 2, 10],
-    [float('inf'), 2, 0, 3],
-    [float('inf'), 10, 3, 0]
-])
-```
-
-# Run CUDA parallel Floyd-Warshall
-```bash
-dist_cuda = floyd_warshall_cuda_host(graph)
-```
-
-You can benchmark the execution time for different thread configurations such as `(8, 8)`, `(16, 16)`, and `(32, 32)` to evaluate the performance gains of parallelization.
-
-
-### Data File
- A sample benchmark dataset is **generated** within the script and does not require any external data file. The graph data used for testing is randomly generated within the code, so you can simply run the algorithm without needing to provide any additional files.
-
+1.  Execute the script directly:
+    ```bash
+    python floyd_warshall.py
+    ```
+    
+2.  The script generates a random graph (500 nodes by default, 0.5 probability of connection), runs both the non-parallel and parallel versions of the algorithm, verifies the correctness of the results, and plots the speedup achieved by parallel execution.
 
 ## 3. Parallelized Part of the Algorithm
 
@@ -117,7 +85,7 @@ Where:
 
 The speedup increases as the number of threads increases, but at a certain point, the speedup may begin to plateau due to the overhead of managing too many threads or hardware limitations.
 
-#### Example Speedup Plot
+#### Speedup Plot
 
 A plot showing the relationship between the number of threads and speedup can be generated. The X-axis represents the number of threads (e.g., `(8, 8)`, `(16, 16)`, `(32, 32)`), and the Y-axis represents the speedup (the ratio of CPU time to GPU time).
 
